@@ -9,8 +9,8 @@ import {
   useLocation,
 } from 'react-router-dom';
 import { AnimatePresence } from 'framer-motion';
-import LandingPage from './LandingPage';
-import Page2 from './Page2';
+import LandingPage from './components/LandingPage';
+import Quizpage from './components/Quizpage';
 
 export default function App() {
   const location = useLocation();
@@ -25,8 +25,8 @@ export default function App() {
           <Route exact path="/landingPage">
             <LandingPage />
           </Route>
-          <Route exact path="/page2">
-            <Page2 />
+          <Route exact path="/quizpage">
+            <Quizpage />
           </Route>
         </Switch>
       </AnimatePresence>

@@ -3,7 +3,7 @@ html {
   margin: 0;
   padding: 0;
   overflow-x: hidden;
-  background-color: #acacac
+  background-color: #acacac;
 }
 
 * {
@@ -17,57 +17,106 @@ html {
   display: flex;
   flex-direction: column;
   margin: 0 auto;
-  background-color: #acacac
+  background-color: #acacac;
 }
+
+/* Anything below 480 px*/
 
 .title {
   display: flex;
-  justify-content: space-between;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
 }
 
-.title>.logo {
+.title > .logo {
   margin: 15px;
-  color: gainsboro
+  color: gainsboro;
+  justify-self: center;
 }
 
-.title>.bi-line {
+.title > .bi-line {
   flex-grow: 2;
   align-items: flex-end;
   display: flex;
   align-items: center;
-  /* margin-left: 10px;
-  margin-right: 25px; */
 }
 
-.bi-line>h2 {
+.bi-line > h2 {
   color: gainsboro;
   border-bottom: 1px solid grey;
   margin: 0px;
   flex-grow: 1;
 }
 
-.intro {
+.quiz-content {
+  display: flex;
+  margin-top: 120px;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+}
 
+.feedback-area {
+  display: flex;
+  justify-content: space-between;
+  border: 1px solid sienna;
+  width: 100%;
+}
+
+.feedback-area > h4 {
+  margin: 0;
+  align-self: flex-end;
+}
+
+.quiz-area {
+  border: 1px solid slateblue;
+}
+
+.controls-area {
+  margin-top: 32px;
+  border: 1px solid seagreen;
+}
+
+/* Anything above 480 px*/
+
+@media screen and (min-width: 480px) {
+  .title {
+    display: flex;
+    flex-direction: row;
+    justify-content: space-between;
+  }
+
+  .title > .logo {
+    margin: 15px;
+    color: gainsboro;
+    justify-self: center;
+  }
+
+  .title > .bi-line {
+    flex-grow: 2;
+    align-items: flex-end;
+    display: flex;
+    align-items: center;
+  }
+
+  .bi-line > h2 {
+    color: gainsboro;
+    border-bottom: 1px solid grey;
+    margin: 0px;
+    flex-grow: 1;
+  }
+}
+
+/* ================================================= */
+
+.intro {
   margin-top: 150px;
   display: flex;
   flex-direction: column;
-  align-self: center;
-  justify-self: center;
+  text-align: center;
   align-items: center;
-
 }
-
-/* button {
-  border: none;
-  border-radius: 2em;
-  box-shadow: 2px 2px 2px rgba(0, 0, 0, 0.2);
-  display: inline-block;
-  font-size: 1em;
-  padding: 1em 2em;
-  width: 250px;
-  margin-top: 65px;
-  box-shadow: 3px 5px 5px #888888;
-} */
 
 button {
   color: white;

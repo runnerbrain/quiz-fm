@@ -25,7 +25,7 @@ function LandingPage() {
     >
       <h2>Introduction to coffee roasting</h2>
       <h3>This quiz consists of 5 questions</h3>
-      <Link to="/Page2">
+      <Link to="/Quizpage">
         <motion.button
           whileHover={{
             scale: 1.1,
