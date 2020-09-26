@@ -10,6 +10,16 @@ html {
   box-sizing: border-box;
 }
 
+
+
+button {
+  outline: none;
+}
+
+li {
+  list-style: none;
+}
+
 .App {
   font-family: 'Quicksand', sans-serif;
   height: 100vh;
@@ -29,20 +39,20 @@ html {
   align-items: center;
 }
 
-.title > .logo {
+.title>.logo {
   margin: 15px;
   color: gainsboro;
   justify-self: center;
 }
 
-.title > .bi-line {
+.title>.bi-line {
   flex-grow: 2;
   align-items: flex-end;
   display: flex;
   align-items: center;
 }
 
-.bi-line > h2 {
+.bi-line>h2 {
   color: gainsboro;
   border-bottom: 1px solid grey;
   margin: 0px;
@@ -62,14 +72,16 @@ html {
   justify-content: space-between;
   border: 1px solid sienna;
   width: 100%;
+  max-width: 860px;
 }
 
-.feedback-area > h4 {
+.feedback-area>h4 {
   margin: 0;
   align-self: flex-end;
 }
 
 .quiz-area {
+  margin-top: 32px;
   border: 1px solid slateblue;
 }
 
@@ -87,20 +99,20 @@ html {
     justify-content: space-between;
   }
 
-  .title > .logo {
+  .title>.logo {
     margin: 15px;
     color: gainsboro;
     justify-self: center;
   }
 
-  .title > .bi-line {
+  .title>.bi-line {
     flex-grow: 2;
     align-items: flex-end;
     display: flex;
     align-items: center;
   }
 
-  .bi-line > h2 {
+  .bi-line>h2 {
     color: gainsboro;
     border-bottom: 1px solid grey;
     margin: 0px;

@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useState } from 'react';
 import { Link } from 'react-router-dom';
 import { motion } from 'framer-motion';
 
@@ -7,20 +7,22 @@ const quizData = [
     id: 0,
     questionText: 'Coffee roasting is a sensory driven process',
     answers: [
-      { id: 1, value: 'True' },
-      { id: 0, value: 'False' },
+      { id: 1, value: 'True', isCorrect: true },
+      { id: 0, value: 'False', isCorrect: false },
     ],
-    correctAnswerId: 1,
+    correctAnswer: [1],
+    answerType: 'single',
   },
   {
     id: 1,
     questionText:
       'You must apply convection heat only at the beginning of the roasting process',
     answers: [
-      { id: 1, value: 'True' },
-      { id: 0, value: 'False' },
+      { id: 1, value: 'True', isCorrect: false },
+      { id: 0, value: 'False', isCorrect: true },
     ],
-    correctAnswerId: 0,
+    correctAnswer: [0],
+    answerType: 'single',
   },
   {
     id: 2,
@@ -29,20 +31,24 @@ const quizData = [
       {
         id: 0,
         value: 'Arabica coffee that comes from a special place on earth.',
+        isCorrect: false,
       },
       {
         id: 1,
         value:
           'Must be Arabica, scored 80% by a Q grader and has no more that 7 full defects in a 300 g sample.',
+        isCorrect: false,
       },
       {
         id: 2,
         value:
           'Must be Arabica, scored 80% by a Q grader and has no more that 5 full defects in a 300 g sample.',
+        isCorrect: true,
       },
-      { id: 99, value: 'None of the above' },
+      { id: 3, value: 'None of the above', isCorrect: false },
     ],
-    correctAnswerId: 2,
+    correctAnswer: [2],
+    answerType: 'multiple',
   },
   {
     id: 3,
@@ -51,12 +57,22 @@ const quizData = [
       {
         id: 0,
         value: 'Drying phase, Maillard phase, development phase.',
+        isCorrect: true,
       },
-      { id: 1, value: 'The previous answer is missing the pre-drying phase.' },
-      { id: 2, value: 'Phases overlap and cannot be easily defined.' },
-      { id: 3, value: 'All of the above.' },
+      {
+        id: 1,
+        value: 'The previous answer is missing the pre-drying phase.',
+        isCorrect: false,
+      },
+      {
+        id: 2,
+        value: 'Phases overlap and cannot be easily defined.',
+        isCorrect: false,
+      },
+      { id: 3, value: 'All of the above.', isCorrect: false },
     ],
-    correctAnswerId: 0,
+    correctAnswer: [0],
+    answerType: 'single',
   },
   {
     id: 4,
@@ -66,16 +82,99 @@ const quizData = [
         id: 0,
         value:
           'It gives an opportunity to practice the various controls on your roaster with cheaply bought green beans.',
+        isCorrect: false,
       },
-      { id: 1, value: 'Gets rid of manufacturing contaminants' },
-      { id: 2, value: 'Coats the drum with coffee oils.' },
-      { id: 3, value: 'All of the above.' },
+      {
+        id: 1,
+        value: 'Gets rid of manufacturing contaminants',
+        isCorrect: false,
+      },
+      { id: 2, value: 'Coats the drum with coffee oils.', isCorrect: false },
+      { id: 3, value: 'All of the above.', isCorrect: true },
     ],
-    correctAnswerId: 3,
+    correctAnswer: [3],
+    answerType: 'multiple',
   },
 ];
+const numberOfQuestions = 5;
 
-const Page2 = () => {
+const Quizpage = () => {
+  const [currentQuestion, setCurrentQuestion] = useState(0);
+  const [selectedAnswer, setSelectedAnswer] = useState(null);
+  const [selectedAnswers, setSelectedAnswers] = useState([]);
+
+  const nextQuestion = () => {
+    if (currentQuestion < numberOfQuestions - 1)
+      setCurrentQuestion(currentQuestion + 1);
+    else setCurrentQuestion(0);
+  };
+
+  const handleChange = (event) => {
+    console.log(
+      'here --: ' +
+        event.target.id +
+        '  ' +
+        event.target.name +
+        ' -- ' +
+        event.target.type +
+        '-- ' +
+        event.target.checked
+    );
+    event.target.type === 'radio'
+      ? event.target.checked && setSelectedAnswer(parseInt(event.target.id))
+      : event.target.checked && selectedAnswers.push(event.target.id);
+
+    // setSelectedAnswers([...selectedAnswers,
+    // }]);
+  };
+
+  const renderAnswers = (currentAnswers, answerType) => {
+    // currentAnswers.map((answerChoice) => console.log(answerChoice.value));
+    return currentAnswers.map((answerChoice) =>
+      answerType === 'single' ? (
+        <li>
+          <input
+            type="radio"
+            name="answer"
+            id={answerChoice.id}
+            onChange={handleChange}
+            // checked={selected === answerChoice.id}
+          />
+          {answerChoice.value}
+        </li>
+      ) : (
+        <li>
+          <input
+            type="checkbox"
+            name={`answer${answerChoice.id}`}
+            id={answerChoice.id}
+            onChange={handleChange}
+          />
+          {answerChoice.value}
+        </li>
+      )
+    );
+    //   console.log(answerChoice.value)
+    // );
+    //   answerType === 'single' ? (
+    //     <input
+    //       type="radio"
+    //       name="answer"
+    //       id={currentQuestion.id}
+    //       value={currentQuestion.id}
+    //       onChange={handleChange}
+    //     />
+    //   ) : (
+    //     <input type="checkbox" onChange={handleChange} />
+    //   )
+    // );
+  };
+
+  const checkAnswer = (event) => {
+    event.preventDefault();
+    if (selectedAnswers) console.log(selectedAnswers);
+  };
+
   const containerVariants = {
     hidden: { opacity: 0 },
     visible: {
@@ -100,16 +199,26 @@ const Page2 = () => {
         <h4>Question number</h4>
         <h4>Correct number</h4>
       </div>
-      <div className="quiz-area">
-        <h2> This is page 2 :) </h2>
-      </div>
-      <div className="controls-area">
-        <Link to="/LandingPage">
-          <button>Take me back home</button>
-        </Link>
-      </div>
+      <form onSubmit={checkAnswer}>
+        <div className="quiz-area">
+          {quizData[currentQuestion].questionText}
+          <ul>
+            {renderAnswers(
+              quizData[currentQuestion].answers,
+              quizData[currentQuestion].answerType
+            )}
+          </ul>
+        </div>
+        <div className="controls-area">
+          <button>Submit</button>
+          <button onClick={nextQuestion}>Next</button>
+          <Link to="/LandingPage">
+            <button>Take me back home</button>
+          </Link>
+        </div>
+      </form>
     </motion.div>
   );
 };
 
-export default Page2;
+export default Quizpage;
