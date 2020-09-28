@@ -120,9 +120,30 @@ const Quizpage = () => {
         '-- ' +
         event.target.checked
     );
-    event.target.type === 'radio'
-      ? event.target.checked && setSelectedAnswer(parseInt(event.target.id))
-      : event.target.checked && selectedAnswers.push(event.target.id);
+    switch (event.target.type) {
+      case 'radio':
+        event.target.checked && setSelectedAnswer(parseInt(event.target.id));
+        break;
+      case 'checkbox': {
+        if (event.target.checked === true) {
+          !selectedAnswers.includes(event.target.id)
+            ? selectedAnswers.push(event.target.id)
+            : null;
+        } else {
+          selectedAnswers.includes(event.target.id)
+            ? selectedAnswers.splice(
+                selectedAnswers.indexOf(event.target.id),
+                1
+              )
+            : null;
+        }
+      }
+      default:
+        break;
+    }
+    // event.target.type === 'radio'
+    //   ? event.target.checked && setSelectedAnswer(parseInt(event.target.id))
+    //   : event.target.checked && selectedAnswers.push(event.target.id);
 
     // setSelectedAnswers([...selectedAnswers,
     // }]);
@@ -199,7 +220,7 @@ const Quizpage = () => {
         <h4>Question number</h4>
         <h4>Correct number</h4>
       </div>
-      <form onSubmit={checkAnswer}>
+      <form onSubmit={checkAnswer} id="answer-form">
         <div className="quiz-area">
           {quizData[currentQuestion].questionText}
           <ul>
