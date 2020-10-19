@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { Link } from 'react-router-dom';
 import { motion } from 'framer-motion';
 
@@ -7,8 +7,8 @@ const quizData = [
     id: 0,
     questionText: 'Coffee roasting is a sensory driven process',
     answers: [
-      { id: 1, value: 'True', isCorrect: true },
-      { id: 0, value: 'False', isCorrect: false },
+      { id: 1, value: 'True', isChecked: false },
+      { id: 0, value: 'False', isChecked: false },
     ],
     correctAnswer: [1],
     answerType: 'single',
@@ -18,8 +18,8 @@ const quizData = [
     questionText:
       'You must apply convection heat only at the beginning of the roasting process',
     answers: [
-      { id: 1, value: 'True', isCorrect: false },
-      { id: 0, value: 'False', isCorrect: true },
+      { id: 1, value: 'True', isChecked: false },
+      { id: 0, value: 'False', isChecked: false },
     ],
     correctAnswer: [0],
     answerType: 'single',
@@ -31,21 +31,21 @@ const quizData = [
       {
         id: 0,
         value: 'Arabica coffee that comes from a special place on earth.',
-        isCorrect: false,
+        isChecked: false,
       },
       {
         id: 1,
         value:
           'Must be Arabica, scored 80% by a Q grader and has no more that 7 full defects in a 300 g sample.',
-        isCorrect: false,
+        isChecked: false,
       },
       {
         id: 2,
         value:
           'Must be Arabica, scored 80% by a Q grader and has no more that 5 full defects in a 300 g sample.',
-        isCorrect: true,
+        isChecked: false,
       },
-      { id: 3, value: 'None of the above', isCorrect: false },
+      { id: 3, value: 'None of the above', isChecked: false },
     ],
     correctAnswer: [2],
     answerType: 'multiple',
@@ -57,22 +57,22 @@ const quizData = [
       {
         id: 0,
         value: 'Drying phase, Maillard phase, development phase.',
-        isCorrect: true,
+        isChecked: false,
       },
       {
         id: 1,
         value: 'The previous answer is missing the pre-drying phase.',
-        isCorrect: false,
+        isChecked: false,
       },
       {
         id: 2,
         value: 'Phases overlap and cannot be easily defined.',
-        isCorrect: false,
+        isChecked: false,
       },
-      { id: 3, value: 'All of the above.', isCorrect: false },
+      { id: 3, value: 'All of the above.', isChecked: false },
     ],
     correctAnswer: [0],
-    answerType: 'single',
+    answerType: 'multiple',
   },
   {
     id: 4,
@@ -82,15 +82,15 @@ const quizData = [
         id: 0,
         value:
           'It gives an opportunity to practice the various controls on your roaster with cheaply bought green beans.',
-        isCorrect: false,
+        isChecked: false,
       },
       {
         id: 1,
         value: 'Gets rid of manufacturing contaminants',
-        isCorrect: false,
+        isChecked: false,
       },
-      { id: 2, value: 'Coats the drum with coffee oils.', isCorrect: false },
-      { id: 3, value: 'All of the above.', isCorrect: true },
+      { id: 2, value: 'Coats the drum with coffee oils.', isChecked: false },
+      { id: 3, value: 'All of the above.', isChecked: false },
     ],
     correctAnswer: [3],
     answerType: 'multiple',
@@ -103,97 +103,140 @@ const Quizpage = () => {
   const [selectedAnswer, setSelectedAnswer] = useState(null);
   const [selectedAnswers, setSelectedAnswers] = useState([]);
 
-  const nextQuestion = () => {
+  const checkAnswer = (event) => {
+    event.preventDefault();
+    if (selectedAnswers) console.log(selectedAnswers);
+  };
+
+  const nextQuestion = (event) => {
+    console.log(selectedAnswers);
+    setSelectedAnswer(null);
+
     if (currentQuestion < numberOfQuestions - 1)
       setCurrentQuestion(currentQuestion + 1);
     else setCurrentQuestion(0);
   };
 
   const handleChange = (event) => {
-    console.log(
-      'here --: ' +
-        event.target.id +
-        '  ' +
-        event.target.name +
-        ' -- ' +
-        event.target.type +
-        '-- ' +
-        event.target.checked
-    );
-    switch (event.target.type) {
+    const { checked, id, type, value, name } = event.target;
+    // console.log(
+    //   'id: ' +
+    //     id +
+    //     ', name: ' +
+    //     name +
+    //     ', type: ' +
+    //     type +
+    //     ', checked: ' +
+    //     checked +
+    //     ', value: ' +
+    //     value
+    // );
+    switch (type) {
       case 'radio':
-        event.target.checked && setSelectedAnswer(parseInt(event.target.id));
+        checked && setSelectedAnswer(parseInt(id));
+        // console.log(selectedAnswer);
+
         break;
-      case 'checkbox': {
-        if (event.target.checked === true) {
-          !selectedAnswers.includes(event.target.id)
-            ? selectedAnswers.push(event.target.id)
-            : null;
-        } else {
-          selectedAnswers.includes(event.target.id)
-            ? selectedAnswers.splice(
-                selectedAnswers.indexOf(event.target.id),
-                1
-              )
-            : null;
-        }
-      }
+      case 'checkbox':
+        let currentChoices = quizData[currentQuestion].answers;
+        currentChoices.forEach((choice) => {
+          console.log(choice.value);
+          console.log(value);
+          if (choice.value === value) {
+            setSelectedAnswers([...selectedAnswers, id]);
+          } else {
+            setSelectedAnswers(
+              selectedAnswers.filter((choice) => {
+                if (choice === id) return false;
+                return true;
+              })
+            );
+          }
+        });
+        // if (checked === true) {
+        //   if (!selectedAnswers.includes(id)) {
+        //     setSelectedAnswers([...selectedAnswers, id]);
+        //   }
+        // } else {
+        //   setSelectedAnswers(
+        //     selectedAnswers.filter((item) => {
+        //       if (item === id) return false;
+        //       return true;
+        //     })
+        //   );
+        // }
+        break;
       default:
         break;
     }
-    // event.target.type === 'radio'
-    //   ? event.target.checked && setSelectedAnswer(parseInt(event.target.id))
-    //   : event.target.checked && selectedAnswers.push(event.target.id);
-
-    // setSelectedAnswers([...selectedAnswers,
-    // }]);
+    console.log(selectedAnswers);
   };
 
   const renderAnswers = (currentAnswers, answerType) => {
-    // currentAnswers.map((answerChoice) => console.log(answerChoice.value));
-    return currentAnswers.map((answerChoice) =>
-      answerType === 'single' ? (
-        <li>
-          <input
-            type="radio"
-            name="answer"
-            id={answerChoice.id}
-            onChange={handleChange}
-            // checked={selected === answerChoice.id}
-          />
-          {answerChoice.value}
-        </li>
-      ) : (
-        <li>
-          <input
-            type="checkbox"
-            name={`answer${answerChoice.id}`}
-            id={answerChoice.id}
-            onChange={handleChange}
-          />
-          {answerChoice.value}
-        </li>
-      )
-    );
-    //   console.log(answerChoice.value)
-    // );
+    switch (answerType) {
+      case 'single':
+        {
+          return currentAnswers.map((answerChoice, i) => (
+            <li key={answerChoice.id}>
+              <label forhtml={answerChoice.id}>
+                <input
+                  type="radio"
+                  name="singleChoice"
+                  id={answerChoice.id}
+                  onChange={handleChange}
+                  checked={selectedAnswer === answerChoice.id}
+                />
+                {answerChoice.value}
+              </label>
+            </li>
+          ));
+        }
+        break;
+      case 'multiple':
+        return currentAnswers.map((answerChoice, i) => (
+          <li>
+            <label>
+              <input
+                type="checkbox"
+                name="multipleChoice"
+                id={answerChoice.id}
+                onChange={handleChange}
+              />
+              {answerChoice.value}
+            </label>
+          </li>
+        ));
+        break;
+      default:
+        break;
+    }
+    // return currentAnswers.map((answerChoice, i) =>
     //   answerType === 'single' ? (
-    //     <input
-    //       type="radio"
-    //       name="answer"
-    //       id={currentQuestion.id}
-    //       value={currentQuestion.id}
-    //       onChange={handleChange}
-    //     />
+    //     <li key={answerChoice.id}>
+    //       <input
+    //         type="radio"
+    //         name="answer"
+    //         id={answerChoice.id}
+    //         onChange={handleChange}
+    //         checked={selectedAnswer === answerChoice.id}
+    //       />
+    //       {answerChoice.value}
+    //     </li>
     //   ) : (
-    //     <input type="checkbox" onChange={handleChange} />
+    //     <li key={answerChoice.id}>
+    //       <input
+    //         type="checkbox"
+    //         name="answer"
+    //         id={answerChoice.id}
+    //         onChange={handleChange}
+    //         checked={selectedAnswers.forEach((item) => {
+    //           if (item === answerChoice.id) return true;
+    //         })}
+    //       />
+    //       {answerChoice.value}
+    //     </li>
     //   )
     // );
-  };
-
-  const checkAnswer = (event) => {
-    event.preventDefault();
-    if (selectedAnswers) console.log(selectedAnswers);
   };
 
   const containerVariants = {
@@ -220,24 +263,24 @@ const Quizpage = () => {
         <h4>Question number</h4>
         <h4>Correct number</h4>
       </div>
-      <form onSubmit={checkAnswer} id="answer-form">
-        <div className="quiz-area">
-          {quizData[currentQuestion].questionText}
-          <ul>
-            {renderAnswers(
-              quizData[currentQuestion].answers,
-              quizData[currentQuestion].answerType
-            )}
-          </ul>
-        </div>
-        <div className="controls-area">
-          <button>Submit</button>
-          <button onClick={nextQuestion}>Next</button>
-          <Link to="/LandingPage">
-            <button>Take me back home</button>
-          </Link>
-        </div>
-      </form>
+      {/* <form onSubmit={checkAnswer} id="answer-form"> */}
+      <div className="quiz-area">
+        {quizData[currentQuestion].questionText}
+        <ul>
+          {renderAnswers(
+            quizData[currentQuestion].answers,
+            quizData[currentQuestion].answerType
+          )}
+        </ul>
+      </div>
+      <div className="controls-area">
+        <button onClick={checkAnswer}>Submit</button>
+        <button onClick={nextQuestion}>Next</button>
+        <Link to="/LandingPage">
+          <button>Take me back home</button>
+        </Link>
+      </div>
+      {/* </form> */}
     </motion.div>
   );
 };
