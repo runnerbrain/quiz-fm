@@ -7,8 +7,8 @@ const quizData = [
     id: 0,
     questionText: 'Coffee roasting is a sensory driven process',
     answers: [
-      { id: 1, value: 'True', isChecked: false },
-      { id: 0, value: 'False', isChecked: false },
+      { id: 'a00', answerText: 'True', isChecked: false },
+      { id: 'a01', answerText: 'False', isChecked: false },
     ],
     correctAnswer: [1],
     answerType: 'single',
@@ -18,8 +18,8 @@ const quizData = [
     questionText:
       'You must apply convection heat only at the beginning of the roasting process',
     answers: [
-      { id: 1, value: 'True', isChecked: false },
-      { id: 0, value: 'False', isChecked: false },
+      { id: 'a10', answerText: 'True', isChecked: false },
+      { id: 'a11', answerText: 'False', isChecked: false },
     ],
     correctAnswer: [0],
     answerType: 'single',
@@ -29,23 +29,23 @@ const quizData = [
     questionText: 'What defines Specialty coffee',
     answers: [
       {
-        id: 0,
-        value: 'Arabica coffee that comes from a special place on earth.',
+        id: 'a20',
+        answerText: 'Arabica coffee that comes from a special place on earth.',
         isChecked: false,
       },
       {
-        id: 1,
-        value:
+        id: 'a21',
+        answerText:
           'Must be Arabica, scored 80% by a Q grader and has no more that 7 full defects in a 300 g sample.',
         isChecked: false,
       },
       {
-        id: 2,
-        value:
+        id: 'a22',
+        answerText:
           'Must be Arabica, scored 80% by a Q grader and has no more that 5 full defects in a 300 g sample.',
         isChecked: false,
       },
-      { id: 3, value: 'None of the above', isChecked: false },
+      { id: 'a23', answerText: 'None of the above', isChecked: false },
     ],
     correctAnswer: [2],
     answerType: 'multiple',
@@ -55,21 +55,21 @@ const quizData = [
     questionText: 'Loosely speaking, the agreed upon phases in roasting are:',
     answers: [
       {
-        id: 0,
-        value: 'Drying phase, Maillard phase, development phase.',
+        id: 'a30',
+        answerText: 'Drying phase, Maillard phase, development phase.',
         isChecked: false,
       },
       {
-        id: 1,
-        value: 'The previous answer is missing the pre-drying phase.',
+        id: 'a31',
+        answerText: 'The previous answer is missing the pre-drying phase.',
         isChecked: false,
       },
       {
-        id: 2,
-        value: 'Phases overlap and cannot be easily defined.',
+        id: 'a32',
+        answerText: 'Phases overlap and cannot be easily defined.',
         isChecked: false,
       },
-      { id: 3, value: 'All of the above.', isChecked: false },
+      { id: 'a33', answerText: 'All of the above.', isChecked: false },
     ],
     correctAnswer: [0],
     answerType: 'multiple',
@@ -79,18 +79,22 @@ const quizData = [
     questionText: 'Seasoning the roaster helps because:',
     answers: [
       {
-        id: 0,
-        value:
+        id: 'a40',
+        answerText:
           'It gives an opportunity to practice the various controls on your roaster with cheaply bought green beans.',
         isChecked: false,
       },
       {
-        id: 1,
-        value: 'Gets rid of manufacturing contaminants',
+        id: 'a41',
+        answerText: 'Gets rid of manufacturing contaminants',
         isChecked: false,
       },
-      { id: 2, value: 'Coats the drum with coffee oils.', isChecked: false },
-      { id: 3, value: 'All of the above.', isChecked: false },
+      {
+        id: 'a42',
+        answerText: 'Coats the drum with coffee oils.',
+        isChecked: false,
+      },
+      { id: 'a43', answerText: 'All of the above.', isChecked: false },
     ],
     correctAnswer: [3],
     answerType: 'multiple',
@@ -103,15 +107,21 @@ const Quizpage = () => {
   const [selectedAnswer, setSelectedAnswer] = useState(null);
   const [selectedAnswers, setSelectedAnswers] = useState([]);
 
+  useEffect(() => {
+    console.log(selectedAnswers);
+    if (selectedAnswers.length === 0) console.log('empty array');
+  }, [selectedAnswers]);
+
   const checkAnswer = (event) => {
     event.preventDefault();
     if (selectedAnswers) console.log(selectedAnswers);
   };
 
   const nextQuestion = (event) => {
-    console.log(selectedAnswers);
-    setSelectedAnswer(null);
+    // console.log(selectedAnswers);
 
+    setSelectedAnswer(null);
+    setSelectedAnswers([]);
     if (currentQuestion < numberOfQuestions - 1)
       setCurrentQuestion(currentQuestion + 1);
     else setCurrentQuestion(0);
@@ -119,52 +129,26 @@ const Quizpage = () => {
 
   const handleChange = (event) => {
     const { checked, id, type, value, name } = event.target;
-    // console.log(
-    //   'id: ' +
-    //     id +
-    //     ', name: ' +
-    //     name +
-    //     ', type: ' +
-    //     type +
-    //     ', checked: ' +
-    //     checked +
-    //     ', value: ' +
-    //     value
-    // );
+
     switch (type) {
       case 'radio':
-        checked && setSelectedAnswer(parseInt(id));
-        // console.log(selectedAnswer);
+        if (checked) setSelectedAnswer(id);
+        console.log(selectedAnswer);
 
         break;
       case 'checkbox':
-        let currentChoices = quizData[currentQuestion].answers;
-        currentChoices.forEach((choice) => {
-          console.log(choice.value);
-          console.log(value);
-          if (choice.value === value) {
+        if (checked === true) {
+          if (!selectedAnswers.includes(id)) {
             setSelectedAnswers([...selectedAnswers, id]);
-          } else {
-            setSelectedAnswers(
-              selectedAnswers.filter((choice) => {
-                if (choice === id) return false;
-                return true;
-              })
-            );
           }
-        });
-        // if (checked === true) {
-        //   if (!selectedAnswers.includes(id)) {
-        //     setSelectedAnswers([...selectedAnswers, id]);
-        //   }
-        // } else {
-        //   setSelectedAnswers(
-        //     selectedAnswers.filter((item) => {
-        //       if (item === id) return false;
-        //       return true;
-        //     })
-        //   );
-        // }
+        } else {
+          setSelectedAnswers(
+            selectedAnswers.filter((item) => {
+              if (item === id) return false;
+              return true;
+            })
+          );
+        }
         break;
       default:
         break;
@@ -186,13 +170,14 @@ const Quizpage = () => {
                   onChange={handleChange}
                   checked={selectedAnswer === answerChoice.id}
                 />
-                {answerChoice.value}
+                {answerChoice.answerText}
               </label>
             </li>
           ));
         }
         break;
       case 'multiple':
+        console.log(selectedAnswers);
         return currentAnswers.map((answerChoice, i) => (
           <li>
             <label>
@@ -200,9 +185,11 @@ const Quizpage = () => {
                 type="checkbox"
                 name="multipleChoice"
                 id={answerChoice.id}
+                value={answerChoice.answerText}
                 onChange={handleChange}
+                checked={selectedAnswers.includes(answerChoice.id)}
               />
-              {answerChoice.value}
+              {answerChoice.answerText}
             </label>
           </li>
         ));
@@ -210,33 +197,6 @@ const Quizpage = () => {
       default:
         break;
     }
-    // return currentAnswers.map((answerChoice, i) =>
-    //   answerType === 'single' ? (
-    //     <li key={answerChoice.id}>
-    //       <input
-    //         type="radio"
-    //         name="answer"
-    //         id={answerChoice.id}
-    //         onChange={handleChange}
-    //         checked={selectedAnswer === answerChoice.id}
-    //       />
-    //       {answerChoice.value}
-    //     </li>
-    //   ) : (
-    //     <li key={answerChoice.id}>
-    //       <input
-    //         type="checkbox"
-    //         name="answer"
-    //         id={answerChoice.id}
-    //         onChange={handleChange}
-    //         checked={selectedAnswers.forEach((item) => {
-    //           if (item === answerChoice.id) return true;
-    //         })}
-    //       />
-    //       {answerChoice.value}
-    //     </li>
-    //   )
-    // );
   };
 
   const containerVariants = {
