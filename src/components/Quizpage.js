@@ -10,7 +10,7 @@ const quizData = [
       { id: 'a00', answerText: 'True', isChecked: false },
       { id: 'a01', answerText: 'False', isChecked: false },
     ],
-    correctAnswer: [1],
+    correctAnswer: ['a00'],
     answerType: 'single',
   },
   {
@@ -21,7 +21,7 @@ const quizData = [
       { id: 'a10', answerText: 'True', isChecked: false },
       { id: 'a11', answerText: 'False', isChecked: false },
     ],
-    correctAnswer: [0],
+    correctAnswer: ['a11'],
     answerType: 'single',
   },
   {
@@ -36,7 +36,7 @@ const quizData = [
       {
         id: 'a21',
         answerText:
-          'Must be Arabica, scored 80% by a Q grader and has no more that 7 full defects in a 300 g sample.',
+          'Must be Arabica, scored 70% by a Q grader and has no more that 7 full defects in a 300 g sample.',
         isChecked: false,
       },
       {
@@ -47,7 +47,7 @@ const quizData = [
       },
       { id: 'a23', answerText: 'None of the above', isChecked: false },
     ],
-    correctAnswer: [2],
+    correctAnswer: ['a22'],
     answerType: 'multiple',
   },
   {
@@ -71,7 +71,7 @@ const quizData = [
       },
       { id: 'a33', answerText: 'All of the above.', isChecked: false },
     ],
-    correctAnswer: [0],
+    correctAnswer: ['a30'],
     answerType: 'multiple',
   },
   {
@@ -94,9 +94,9 @@ const quizData = [
         answerText: 'Coats the drum with coffee oils.',
         isChecked: false,
       },
-      { id: 'a43', answerText: 'All of the above.', isChecked: false },
+      { id: 'a43', answerText: 'None of the above.', isChecked: false },
     ],
-    correctAnswer: [3],
+    correctAnswer: ['a40', 'a41', 'a42'],
     answerType: 'multiple',
   },
 ];
@@ -106,6 +106,9 @@ const Quizpage = () => {
   const [currentQuestion, setCurrentQuestion] = useState(0);
   const [selectedAnswer, setSelectedAnswer] = useState(null);
   const [selectedAnswers, setSelectedAnswers] = useState([]);
+  const [showNext, setShowNext] = useState(false);
+  const [showSubmit, setShowSubmit] = useState(true);
+  const [showError, setShowError] = useState(false);
 
   useEffect(() => {
     console.log(selectedAnswers);
@@ -114,12 +117,38 @@ const Quizpage = () => {
 
   const checkAnswer = (event) => {
     event.preventDefault();
-    if (selectedAnswers) console.log(selectedAnswers);
+    if (!selectedAnswer) {
+      setShowError(true);
+      return;
+    }
+    switch (quizData[currentQuestion].answerType) {
+      case 'single': {
+        if (quizData[currentQuestion].correctAnswer[0] === selectedAnswer) {
+          setShowNext(true);
+          setShowSubmit(false);
+          console.log('right');
+        } else {
+          setShowNext(true);
+          setShowSubmit(false);
+          console.log(' wrong');
+        }
+      }
+    }
+
+    if (!selectedAnswers) {
+      setShowError(true);
+      console.log(selectedAnswers);
+    } else {
+      setShowNext(true);
+      setShowSubmit(false);
+      // selectedAnswers.forEach(ans => if(ans))
+    }
   };
 
   const nextQuestion = (event) => {
     // console.log(selectedAnswers);
-
+    setShowNext(false);
+    setShowSubmit(true);
     setSelectedAnswer(null);
     setSelectedAnswers([]);
     if (currentQuestion < numberOfQuestions - 1)
@@ -133,7 +162,7 @@ const Quizpage = () => {
     switch (type) {
       case 'radio':
         if (checked) setSelectedAnswer(id);
-        console.log(selectedAnswer);
+        // console.log(selectedAnswer);
 
         break;
       case 'checkbox':
@@ -212,36 +241,39 @@ const Quizpage = () => {
   };
 
   return (
-    <motion.div
-      variants={containerVariants}
-      initial="hidden"
-      animate="visible"
-      exit="exit"
-      className="quiz-content"
-    >
-      <div className="feedback-area">
-        <h4>Question number</h4>
-        <h4>Correct number</h4>
-      </div>
-      {/* <form onSubmit={checkAnswer} id="answer-form"> */}
-      <div className="quiz-area">
-        {quizData[currentQuestion].questionText}
-        <ul>
-          {renderAnswers(
-            quizData[currentQuestion].answers,
-            quizData[currentQuestion].answerType
-          )}
-        </ul>
-      </div>
-      <div className="controls-area">
-        <button onClick={checkAnswer}>Submit</button>
-        <button onClick={nextQuestion}>Next</button>
-        <Link to="/LandingPage">
-          <button>Take me back home</button>
-        </Link>
-      </div>
-      {/* </form> */}
-    </motion.div>
+    <>
+      <motion.div
+        variants={containerVariants}
+        initial="hidden"
+        animate="visible"
+        exit="exit"
+        className="quiz-content"
+      >
+        <div className="feedback-area">
+          <h4>Question number</h4>
+          <h4>Correct number</h4>
+        </div>
+        <form onSubmit={checkAnswer} id="answer-form">
+          <div className="quiz-area">
+            {quizData[currentQuestion].questionText}
+            <ul>
+              {renderAnswers(
+                quizData[currentQuestion].answers,
+                quizData[currentQuestion].answerType
+              )}
+            </ul>
+          </div>
+          <div className="controls-area">
+            {showSubmit && <button onClick={checkAnswer}>Submit</button>}
+            {showNext && <button onClick={nextQuestion}>Next</button>}
+            <Link to="/LandingPage">
+              <button>Take me back home</button>
+            </Link>
+          </div>
+        </form>
+      </motion.div>
+      {showError && <div className="msgArea">Error</div>}
+    </>
   );
 };
 
