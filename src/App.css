@@ -70,9 +70,10 @@ li {
 .feedback-area {
   display: flex;
   justify-content: space-between;
-  border: 1px solid sienna;
   width: 100%;
   max-width: 860px;
+  font-weight: 200;
+  color: grey;
 }
 
 .feedback-area>h4 {

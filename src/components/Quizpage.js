@@ -1,6 +1,9 @@
 import React, { useState, useEffect } from 'react';
+
 import { Link } from 'react-router-dom';
 import { motion } from 'framer-motion';
+import _, { isEmpty, isNull } from 'lodash';
+import isEqual from 'lodash/isEqual';
 
 const quizData = [
   {
@@ -109,39 +112,69 @@ const Quizpage = () => {
   const [showNext, setShowNext] = useState(false);
   const [showSubmit, setShowSubmit] = useState(true);
   const [showError, setShowError] = useState(false);
+  const [correctNumber, setCorrectNumber] = useState(0);
+  const [inCorrectNumber, setInCorrectNumber] = useState(0);
 
   useEffect(() => {
     console.log(selectedAnswers);
     if (selectedAnswers.length === 0) console.log('empty array');
   }, [selectedAnswers]);
 
+  const comparator = (a, b) => {
+    return a - b;
+  };
+
   const checkAnswer = (event) => {
     event.preventDefault();
-    if (!selectedAnswer) {
+    console.log(selectedAnswer);
+    if (selectedAnswer) console.log('you selected something');
+    if (isEmpty(selectedAnswers) && isNull(selectedAnswer)) {
       setShowError(true);
       return;
     }
     switch (quizData[currentQuestion].answerType) {
-      case 'single': {
+      case 'single':
+        console.log('single');
         if (quizData[currentQuestion].correctAnswer[0] === selectedAnswer) {
+          setCorrectNumber(correctNumber + 1);
           setShowNext(true);
           setShowSubmit(false);
           console.log('right');
         } else {
+          setInCorrectNumber(inCorrectNumber + 1);
+
           setShowNext(true);
           setShowSubmit(false);
           console.log(' wrong');
         }
-      }
-    }
+        break;
 
-    if (!selectedAnswers) {
-      setShowError(true);
-      console.log(selectedAnswers);
-    } else {
-      setShowNext(true);
-      setShowSubmit(false);
-      // selectedAnswers.forEach(ans => if(ans))
+      case 'multiple':
+        console.log('multiple');
+        setShowNext(true);
+        setShowSubmit(false);
+        let sortedSelected = selectedAnswers.sort(function (a, b) {
+          if (a < b) return -1;
+          if (b < a) return 1;
+          return 0;
+        });
+        let sortedAnswers = quizData[currentQuestion].correctAnswer.sort(
+          comparator
+        );
+        console.log('sorted answers: ' + sortedAnswers);
+        console.log('sorted selected: ' + sortedSelected);
+        if (isEqual(sortedSelected, sortedAnswers)) {
+          setCorrectNumber(correctNumber + 1);
+          console.log('right');
+        } else {
+          setInCorrectNumber(inCorrectNumber + 1);
+          console.log('wrong');
+        }
+        break;
+
+      default:
+        console.log('none ??');
+        break;
     }
   };
 
@@ -206,9 +239,9 @@ const Quizpage = () => {
         }
         break;
       case 'multiple':
-        console.log(selectedAnswers);
+        // console.log(selectedAnswers);
         return currentAnswers.map((answerChoice, i) => (
-          <li>
+          <li key={answerChoice.id}>
             <label>
               <input
                 type="checkbox"
@@ -250,8 +283,8 @@ const Quizpage = () => {
         className="quiz-content"
       >
         <div className="feedback-area">
-          <h4>Question number</h4>
-          <h4>Correct number</h4>
+          <h4>{`Question ${currentQuestion + 1} of ${quizData.length}`}</h4>
+          <h4>{`${correctNumber} Correct - ${inCorrectNumber} Incorrect`}</h4>
         </div>
         <form onSubmit={checkAnswer} id="answer-form">
           <div className="quiz-area">
