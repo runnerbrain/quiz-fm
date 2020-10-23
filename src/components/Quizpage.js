@@ -126,12 +126,14 @@ const Quizpage = () => {
 
   const checkAnswer = (event) => {
     event.preventDefault();
-    console.log(selectedAnswer);
-    if (selectedAnswer) console.log('you selected something');
     if (isEmpty(selectedAnswers) && isNull(selectedAnswer)) {
       setShowError(true);
+      setTimeout(() => {
+        setShowError(false);
+      }, 1500);
       return;
     }
+
     switch (quizData[currentQuestion].answerType) {
       case 'single':
         console.log('single');
@@ -304,8 +306,13 @@ const Quizpage = () => {
             </Link>
           </div>
         </form>
+        <motion.div
+          className="msg-area"
+          animate={showError ? { opacity: 1 } : { opacity: 0 }}
+        >
+          Error
+        </motion.div>
       </motion.div>
-      {showError && <div className="msgArea">Error</div>}
     </>
   );
 };

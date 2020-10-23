@@ -10,8 +10,6 @@ html {
   box-sizing: border-box;
 }
 
-
-
 button {
   outline: none;
 }
@@ -72,8 +70,8 @@ li {
   justify-content: space-between;
   width: 100%;
   max-width: 860px;
-  font-weight: 200;
-  color: grey;
+  font-weight: normal;
+  color: #cccccc;
 }
 
 .feedback-area>h4 {
@@ -90,6 +88,20 @@ li {
   margin-top: 32px;
   border: 1px solid seagreen;
 }
+
+.msg-area{
+    margin-top: 32px;
+    padding: 5px 10px;
+    display: flex;
+    justify-content: center;
+    width: 20%;
+    background-color: pink;
+    color: black;
+    border: 1px solid #8a3030;
+    border-radius: 5px;
+}
+
+
 
 /* Anything above 480 px*/
 
