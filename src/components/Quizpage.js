@@ -114,6 +114,8 @@ const Quizpage = () => {
   const [showError, setShowError] = useState(false);
   const [correctNumber, setCorrectNumber] = useState(0);
   const [inCorrectNumber, setInCorrectNumber] = useState(0);
+  const [messageText, setMessageText] = useState(null);
+  const [msgAreaClass, setMsgAreaClass] = useState(null);
 
   useEffect(() => {
     console.log(selectedAnswers);
@@ -127,32 +129,39 @@ const Quizpage = () => {
   const checkAnswer = (event) => {
     event.preventDefault();
     if (isEmpty(selectedAnswers) && isNull(selectedAnswer)) {
+      setMessageText('You must make a selection.');
       setShowError(true);
+      setMsgAreaClass('msg-area error');
       setTimeout(() => {
         setShowError(false);
       }, 1500);
       return;
     }
 
+    const controlsToggle = (msg, msgClass) => {
+      setShowNext(true);
+      setShowSubmit(false);
+      setShowError(true);
+      setMessageText(`${msg}`);
+      setMsgAreaClass(`${msgClass}`);
+      setTimeout(() => {
+        setShowError(false);
+      }, 1500);
+      console.log('right');
+    };
+
     switch (quizData[currentQuestion].answerType) {
       case 'single':
         console.log('single');
         if (quizData[currentQuestion].correctAnswer[0] === selectedAnswer) {
           setCorrectNumber(correctNumber + 1);
-          setShowNext(true);
-          setShowSubmit(false);
-          console.log('right');
+          controlsToggle('You got it!', 'msg-area correct-answer');
         } else {
           setInCorrectNumber(inCorrectNumber + 1);
-
-          setShowNext(true);
-          setShowSubmit(false);
-          console.log(' wrong');
+          controlsToggle('Incorrect', 'msg-area error');
         }
         break;
-
       case 'multiple':
-        console.log('multiple');
         setShowNext(true);
         setShowSubmit(false);
         let sortedSelected = selectedAnswers.sort(function (a, b) {
@@ -163,25 +172,21 @@ const Quizpage = () => {
         let sortedAnswers = quizData[currentQuestion].correctAnswer.sort(
           comparator
         );
-        console.log('sorted answers: ' + sortedAnswers);
-        console.log('sorted selected: ' + sortedSelected);
         if (isEqual(sortedSelected, sortedAnswers)) {
           setCorrectNumber(correctNumber + 1);
-          console.log('right');
+          controlsToggle('You got it!', 'msg-area correct-answer');
         } else {
           setInCorrectNumber(inCorrectNumber + 1);
-          console.log('wrong');
+          controlsToggle('Incorrect', 'msg-area error');
         }
         break;
 
       default:
-        console.log('none ??');
         break;
     }
   };
 
   const nextQuestion = (event) => {
-    // console.log(selectedAnswers);
     setShowNext(false);
     setShowSubmit(true);
     setSelectedAnswer(null);
@@ -192,13 +197,11 @@ const Quizpage = () => {
   };
 
   const handleChange = (event) => {
-    const { checked, id, type, value, name } = event.target;
+    const { checked, id, type } = event.target;
 
     switch (type) {
       case 'radio':
         if (checked) setSelectedAnswer(id);
-        // console.log(selectedAnswer);
-
         break;
       case 'checkbox':
         if (checked === true) {
@@ -217,28 +220,26 @@ const Quizpage = () => {
       default:
         break;
     }
-    console.log(selectedAnswers);
+    // console.log(selectedAnswers);
   };
 
   const renderAnswers = (currentAnswers, answerType) => {
     switch (answerType) {
       case 'single':
-        {
-          return currentAnswers.map((answerChoice, i) => (
-            <li key={answerChoice.id}>
-              <label forhtml={answerChoice.id}>
-                <input
-                  type="radio"
-                  name="singleChoice"
-                  id={answerChoice.id}
-                  onChange={handleChange}
-                  checked={selectedAnswer === answerChoice.id}
-                />
-                {answerChoice.answerText}
-              </label>
-            </li>
-          ));
-        }
+        return currentAnswers.map((answerChoice, i) => (
+          <li key={answerChoice.id}>
+            <label forhtml={answerChoice.id}>
+              <input
+                type="radio"
+                name="singleChoice"
+                id={answerChoice.id}
+                onChange={handleChange}
+                checked={selectedAnswer === answerChoice.id}
+              />
+              {answerChoice.answerText}
+            </label>
+          </li>
+        ));
         break;
       case 'multiple':
         // console.log(selectedAnswers);
@@ -307,10 +308,16 @@ const Quizpage = () => {
           </div>
         </form>
         <motion.div
-          className="msg-area"
-          animate={showError ? { opacity: 1 } : { opacity: 0 }}
+          className={msgAreaClass}
+          animate={
+            showError
+              ? { opacity: 1 }
+              : {
+                  opacity: 0,
+                }
+          }
         >
-          Error
+          {messageText}
         </motion.div>
       </motion.div>
     </>

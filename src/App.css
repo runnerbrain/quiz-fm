@@ -95,12 +95,21 @@ li {
     display: flex;
     justify-content: center;
     width: 20%;
-    background-color: pink;
+    /* background-color: pink; */
     color: black;
-    border: 1px solid #8a3030;
+    /* border: 1px solid #8a3030; */
     border-radius: 5px;
 }
 
+.error{
+  background-color: #d68c8c;
+  border: 1px solid #8a3030;
+}
+
+.correct-answer{
+  background-color: #c1f0c9;
+  border: 1px solid #00753b;
+}
 
 
 /* Anything above 480 px*/
