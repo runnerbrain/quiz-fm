@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react';
 
 import { Link } from 'react-router-dom';
-import { motion } from 'framer-motion';
+import { motion, AnimatePresence } from 'framer-motion';
 import _, { isEmpty, isNull } from 'lodash';
 import isEqual from 'lodash/isEqual';
 
@@ -112,6 +112,7 @@ const Quizpage = () => {
   const [showNext, setShowNext] = useState(false);
   const [showSubmit, setShowSubmit] = useState(true);
   const [showError, setShowError] = useState(false);
+  const [controlsArea, setControlsArea] = useState('controls-area-left');
   const [correctNumber, setCorrectNumber] = useState(0);
   const [inCorrectNumber, setInCorrectNumber] = useState(0);
   const [messageText, setMessageText] = useState(null);
@@ -126,6 +127,19 @@ const Quizpage = () => {
     return a - b;
   };
 
+  const controlsToggle = (msg, msgClass) => {
+    setShowNext(true);
+    setShowSubmit(false);
+    setControlsArea('controls-area-right');
+    setShowError(true);
+    setMessageText(`${msg}`);
+    setMsgAreaClass(`${msgClass}`);
+    setTimeout(() => {
+      setShowError(false);
+    }, 1500);
+    console.log('right');
+  };
+
   const checkAnswer = (event) => {
     event.preventDefault();
     if (isEmpty(selectedAnswers) && isNull(selectedAnswer)) {
@@ -137,18 +151,6 @@ const Quizpage = () => {
       }, 1500);
       return;
     }
-
-    const controlsToggle = (msg, msgClass) => {
-      setShowNext(true);
-      setShowSubmit(false);
-      setShowError(true);
-      setMessageText(`${msg}`);
-      setMsgAreaClass(`${msgClass}`);
-      setTimeout(() => {
-        setShowError(false);
-      }, 1500);
-      console.log('right');
-    };
 
     switch (quizData[currentQuestion].answerType) {
       case 'single':
@@ -189,6 +191,7 @@ const Quizpage = () => {
   const nextQuestion = (event) => {
     setShowNext(false);
     setShowSubmit(true);
+    setControlsArea('controls-area-left');
     setSelectedAnswer(null);
     setSelectedAnswers([]);
     if (currentQuestion < numberOfQuestions - 1)
@@ -227,9 +230,10 @@ const Quizpage = () => {
     switch (answerType) {
       case 'single':
         return currentAnswers.map((answerChoice, i) => (
-          <li key={answerChoice.id}>
+          <li className="answer" key={answerChoice.id}>
             <label forhtml={answerChoice.id}>
               <input
+                className="input"
                 type="radio"
                 name="singleChoice"
                 id={answerChoice.id}
@@ -244,9 +248,10 @@ const Quizpage = () => {
       case 'multiple':
         // console.log(selectedAnswers);
         return currentAnswers.map((answerChoice, i) => (
-          <li key={answerChoice.id}>
+          <li className="answer" key={answerChoice.id}>
             <label>
               <input
+                className="input"
                 type="checkbox"
                 name="multipleChoice"
                 id={answerChoice.id}
@@ -299,12 +304,38 @@ const Quizpage = () => {
               )}
             </ul>
           </div>
-          <div className="controls-area">
-            {showSubmit && <button onClick={checkAnswer}>Submit</button>}
-            {showNext && <button onClick={nextQuestion}>Next</button>}
-            <Link to="/LandingPage">
+          <div className={controlsArea}>
+            {showSubmit && (
+              <div className="submit">
+                <motion.button
+                  onClick={checkAnswer}
+                  initial={{ opacity: 0 }}
+                  animate={{ opacity: 1 }}
+                  exit={{ opacity: 0 }}
+                  duration={{ duration: 1 }}
+                >
+                  Submit
+                </motion.button>
+              </div>
+            )}
+
+            {showNext && (
+              <div className="next">
+                <motion.button
+                  onClick={nextQuestion}
+                  initial={{ opacity: 0 }}
+                  animate={{ opacity: 1 }}
+                  exit={{ opacity: 0 }}
+                  transition={{ duration: 1 }}
+                >
+                  Next
+                </motion.button>
+              </div>
+            )}
+
+            {/* <Link to="/LandingPage">
               <button>Take me back home</button>
-            </Link>
+            </Link> */}
           </div>
         </form>
         <motion.div
