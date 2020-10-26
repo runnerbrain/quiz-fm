@@ -230,17 +230,18 @@ const Quizpage = () => {
     switch (answerType) {
       case 'single':
         return currentAnswers.map((answerChoice, i) => (
-          <li className="answer" key={answerChoice.id}>
-            <label forhtml={answerChoice.id}>
-              <input
-                className="input"
-                type="radio"
-                name="singleChoice"
-                id={answerChoice.id}
-                onChange={handleChange}
-                checked={selectedAnswer === answerChoice.id}
-              />
-              {answerChoice.answerText}
+          <li key={answerChoice.id}>
+            <label className="answer" forhtml={answerChoice.id}>
+              <div className="input-area">
+                <input
+                  type="radio"
+                  name="singleChoice"
+                  id={answerChoice.id}
+                  onChange={handleChange}
+                  checked={selectedAnswer === answerChoice.id}
+                />
+              </div>
+              <div className="answer-text">{answerChoice.answerText}</div>
             </label>
           </li>
         ));
@@ -248,18 +249,19 @@ const Quizpage = () => {
       case 'multiple':
         // console.log(selectedAnswers);
         return currentAnswers.map((answerChoice, i) => (
-          <li className="answer" key={answerChoice.id}>
-            <label>
-              <input
-                className="input"
-                type="checkbox"
-                name="multipleChoice"
-                id={answerChoice.id}
-                value={answerChoice.answerText}
-                onChange={handleChange}
-                checked={selectedAnswers.includes(answerChoice.id)}
-              />
-              {answerChoice.answerText}
+          <li key={answerChoice.id}>
+            <label className="answer" forhtml={answerChoice.id}>
+              <div className="input-area">
+                <input
+                  type="checkbox"
+                  name="multipleChoice"
+                  id={answerChoice.id}
+                  value={answerChoice.answerText}
+                  onChange={handleChange}
+                  checked={selectedAnswers.includes(answerChoice.id)}
+                />
+              </div>
+              <div className="answer-text">{answerChoice.answerText}</div>
             </label>
           </li>
         ));
@@ -294,9 +296,11 @@ const Quizpage = () => {
           <h4>{`Question ${currentQuestion + 1} of ${quizData.length}`}</h4>
           <h4>{`${correctNumber} Correct - ${inCorrectNumber} Incorrect`}</h4>
         </div>
-        <form onSubmit={checkAnswer} id="answer-form">
+        <form onSubmit={checkAnswer} className="answer-form">
           <div className="quiz-area">
-            {quizData[currentQuestion].questionText}
+            <div className="question-text">
+              {quizData[currentQuestion].questionText}
+            </div>
             <ul>
               {renderAnswers(
                 quizData[currentQuestion].answers,
