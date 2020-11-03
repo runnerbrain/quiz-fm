@@ -232,7 +232,7 @@ const Quizpage = () => {
         return currentAnswers.map((answerChoice, i) => (
           <li key={answerChoice.id}>
             <label className="answer" forhtml={answerChoice.id}>
-              <div className="input-area">
+              <div className="input-elem">
                 <input
                   type="radio"
                   name="singleChoice"
@@ -251,7 +251,7 @@ const Quizpage = () => {
         return currentAnswers.map((answerChoice, i) => (
           <li key={answerChoice.id}>
             <label className="answer" forhtml={answerChoice.id}>
-              <div className="input-area">
+              <div className="input-elem">
                 <input
                   type="checkbox"
                   name="multipleChoice"
@@ -290,14 +290,14 @@ const Quizpage = () => {
         initial="hidden"
         animate="visible"
         exit="exit"
-        className="quiz-content"
+        className="quiz-area"
       >
-        <div className="feedback-area">
-          <h4>{`Question ${currentQuestion + 1} of ${quizData.length}`}</h4>
-          <h4>{`${correctNumber} Correct - ${inCorrectNumber} Incorrect`}</h4>
+        <div className="static-feedback">
+          <span>{`Question ${currentQuestion + 1} of ${quizData.length}`}</span>
+          <span>{`${correctNumber} Correct - ${inCorrectNumber} Incorrect`}</span>
         </div>
-        <form onSubmit={checkAnswer} className="answer-form">
-          <div className="quiz-area">
+        <form onSubmit={checkAnswer} className="form-area">
+          <div className="input-area">
             <div className="question-text">
               {quizData[currentQuestion].questionText}
             </div>

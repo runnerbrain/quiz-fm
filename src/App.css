@@ -1,10 +1,16 @@
-body,
-html,ul, form {
+
+html, body,ul, form {
   margin: 0;
   padding: 0;
   overflow-x: hidden;
   background-color: #acacac;
 }
+
+/* body{
+  padding: 0;
+  margin: 0;
+  background-color: blue;
+} */
 
 * {
   box-sizing: border-box;
@@ -28,6 +34,11 @@ li {
   flex-direction: column;
   margin: 0 auto;
   background-color: #acacac;
+}
+
+.col{
+  width: 100%;
+  text-align: justify;
 }
 
 /* Anything below 480 px (mobile)*/
@@ -59,38 +70,56 @@ li {
   flex-grow: 1;
 }
 
-.quiz-content {
+
+.intro {
+  margin-top: 150px;
   display: flex;
-  margin-top: 120px;
   flex-direction: column;
-  justify-content: center;
+  text-align: center;
   align-items: center;
-  width: 80%;
 }
 
-.feedback-area {
+.quiz-area{
+  display: flex;
+  flex-direction: column;
+  margin-top: 32px;
+  width: 100%;
+}
+
+.static-feedback{
   display: flex;
   align-items: center;
   flex-direction: column;
   width: 100%;
-  max-width: 860px;
   font-weight: normal;
   color: #cccccc;
+  margin-top: 20px;
 }
 
-.answer-form{
-  /* width: 100%; */
-}
-
-.feedback-area>h4 {
+.static-feedback>h4 {
   margin: 0;
-  /* align-self: flex-end; */
 }
 
-.quiz-area {
-  margin-top: 32px;
+.form-area{
+  display: flex;
+  flex-direction: column;
 }
 
+.input-area{
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+
+}
+
+.question-text{
+   align-self: start; 
+   margin-top: 20px;
+}
+
+.input-area > ul{
+  align-self: stretch;
+}
 
 .answer{
   display: flex;
@@ -99,7 +128,7 @@ li {
   border-radius: 5px;
   margin-top: 10px;
   font-size: 0.9em;     
-
+  width: 100%;  
 }
 
 .answer:hover{
@@ -108,7 +137,7 @@ color: white;
 
 }
 
-.input-area{
+.input-elem{
 display: flex;
 justify-content: center;
 align-items: center;
@@ -169,14 +198,6 @@ border-right: 1px solid #aab;
 
 
 
-.intro {
-  margin-top: 150px;
-  display: flex;
-  flex-direction: column;
-  text-align: center;
-  align-items: center;
-}
-
 button {
   color: white;
   padding: 5px 20px;
@@ -187,6 +208,15 @@ button {
   margin: 20px auto 0;
   cursor: pointer;
   opacity: 0.7;
+}
+
+/* ================================================== */
+/* ===============Anything above 480px=============== */
+
+
+@media screen and (min-width: 600px) {
+
+
 }
 
 
@@ -221,67 +251,20 @@ button {
     flex-grow: 1;
   }
 
-  .feedback-area {
+  .quiz-area{
+    max-width: 1060px;
+  }
+
+  .static-feedback{
     display: flex;
-    flex-direction: row;
-    justify-content: space-between;
     align-items: center;
+    flex-direction: column;
     width: 100%;
-    max-width: 860px;
     font-weight: normal;
     color: #cccccc;
+    margin-top: 20px;
   }
-  
-  .feedback-area>h4 {
-    margin: 0;
-    align-self: flex-end;
-  }
-
- .answer-form{
-   width: 80%;
- } 
-
-  ul{
-    list-style: none;
-    padding: 0;
-    margin: 0;
-
-  }
-    
-    .answer{
-      display: flex;
-      flex-direction: row;
-      border: 1px solid #999;
-      border-radius: 5px;
-      margin-top: 10px;
-
-    }
-
-  .answer:hover{
-    background-color: #bbb;
-    color: white;
-  }
-
-  .input-area{
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    background: #bbb;
-    padding: 20px;
-    border-top-left-radius: 5px;
-    border-bottom-left-radius: 5px;
-    border-right: 1px solid #aab;
-    
-  }
-
-  .answer-text{
-    display: flex;
-    align-items: center;
-    margin-left: 5px;
-   font-size: 1em;
-  }
-
-  
+ 
 button {
   color: white;
   padding: 10px 40px;
@@ -302,6 +285,7 @@ button {
   color: black;
   border-radius: 5px;
 }
+
   
 }
 
